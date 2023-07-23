@@ -1,14 +1,36 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Padalegria</title>
+    <title>Sistema PãoKentin</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <h1>PadAlegriaaaaaa</h1>
 
-    <a href="cadastroFornada.html">cadastrar um padeiro</a><br/>
-	<a href="verFornadas.html">É um cliente? veja as fornadas!!</a>
+<body>
+<div class="container">
+    <h1>Cadastro de Pães</h1>
+    <form id="bread-form">
+        <label for="bread-type">Tipo de Pão:</label>
+        <input type="text" id="bread-type" required>
+        <label for="bread-time">Tempo de Preparo (minutos):</label>
+        <input type="number" id="bread-time" required>
+        <button type="submit">Cadastrar</button>
+    </form>
+
+    <h1>Fornada de Pães</h1>
+    <div class="bread-buttons" id="bread-buttons">
+        <!-- Os botões de cada tipo de pão serão criados dinamicamente aqui -->
+    </div>
+
+    <h1>Últimas Fornadas</h1>
+    <div class="bread-info" id="bread-info">
+        <!-- As informações das últimas fornadas serão mostradas aqui -->
+    </div>
+</div>
+
+<script src="script.js"></script>
 </body>
+
 </html>
