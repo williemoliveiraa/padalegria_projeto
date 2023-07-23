@@ -3,15 +3,15 @@ const paoList = [];
 const recentFornadas = [];
 
 // Função para adicionar um novo pão ao sistema
-function addPao(type, time) {
-    paoList.push({ type, time });
+function addPao(type, description, time) {
+    paoList.push({ type, description, time });
 }
 
 // Função para registrar uma nova fornada
 function registrarFornada(index) {
     const pao = paoList[index];
     const date = new Date();
-    recentFornadas.push({ type: pao.type, time: pao.time, date });
+    recentFornadas.push({ type: pao.type, description: pao.description, time: pao.time, date });
     showRecentFornadas();
 }
 
@@ -25,7 +25,7 @@ function showRecentFornadas() {
         const timeRemaining = Math.ceil(timeDiff / 1000 / 60);
         const timeDisplay = timeRemaining > 0 ? `Falta ${timeRemaining} minutos` : "Pronto!";
         const info = document.createElement("p");
-        info.innerText = `${fornada.type}: ${fornada.date.toLocaleTimeString()} - ${timeDisplay}`;
+        info.innerText = `${fornada.type} (${fornada.description}): ${fornada.date.toLocaleTimeString()} - ${timeDisplay}`;
         breadInfo.appendChild(info);
     });
 }
@@ -43,25 +43,52 @@ function createBreadButtons() {
         breadButtons.appendChild(button);
     });
 }
+// Função para criar os botões de cadastro de fornada
+function createBakeButtons() {
+    const breadButtons = document.getElementById("bread-buttons");
+    breadButtons.innerHTML = "";
+    paoTypes.forEach((type, index) => {
+        const button = document.createElement("button");
+        button.classList.add("bake-button");
+        button.style.backgroundColor = paoColors[index];
+        button.innerText = type;
+        breadButtons.appendChild(button);
+    });
+    bindBakeButtons();
+}
 
-// Evento de cadastro de novo pão
-const breadForm = document.getElementById("bread-form");
-breadForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const breadType = document.getElementById("bread-type").value;
-    const breadTime = parseInt(document.getElementById("bread-time").value);
-    if (breadType && breadTime) {
-        addPao(breadType, breadTime);
-        createBreadButtons();
-        breadForm.reset();
-    }
-});
+// Função para mostrar as últimas fornadas na tela do cliente
+function showRecentFornadasCliente() {
+    const breadInfo = document.getElementById("bread-info");
+    breadInfo.innerHTML = "";
+    recentFornadas.forEach((fornada) => {
+        const now = new Date();
+        const timeDiff = (fornada.date.getTime() + fornada.time * 60000) - now.getTime();
+        const timeRemaining = Math.ceil(timeDiff / 1000 / 60);
+        const timeDisplay = timeRemaining > 0 ? `Falta ${timeRemaining} minutos` : "Pronto!";
+        const info = document.createElement("p");
+        info.innerText = `${fornada.type} (${fornada.description}): ${fornada.date.toLocaleTimeString()} - ${timeDisplay}`;
+        breadInfo.appendChild(info);
+    });
+}
 
-// Exemplo de pães cadastrados
-addPao("Francês", 20);
-addPao("Doce com Côco", 30);
-addPao("Pão Bolacha", 25);
+// Evento de cadastro de fornada pelo cliente
+function bindBakeButtons() {
+    const bakeButtons = document.querySelectorAll(".bake-button");
+    bakeButtons.forEach((button, index) => {
+        button.addEventListener("click", () => {
+            registrarFornada(index);
+            showRecentFornadasCliente();
+        });
+    });
+}
 
-// Inicializar a exibição dos botões e fornadas
-createBreadButtons();
-showRecentFornadas();
+// Inicialização da página para listar pães cadastrados ou fornadas recentes
+const currentPage = window.location.pathname.split("/").pop();
+if (currentPage === "cadastro-paes.html") {
+    createBreadButtons();
+} else if (currentPage === "cadastro-fornada.html") {
+    createBakeButtons();
+} else if (currentPage === "ultimas-fornadas.html") {
+    showRecentFornadasCliente();
+}
